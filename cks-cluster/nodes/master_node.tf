@@ -4,7 +4,7 @@ resource "google_compute_instance" "cks-master-node" {
   zone           = var.zone
   tags           = var.cks_master_node_tags
   can_ip_forward = true
-  desired_status = "RUNNING"
+  desired_status = "TERMINATED"
 
   boot_disk {
     initialize_params {
@@ -41,7 +41,7 @@ resource "google_compute_instance" "cks-master-node" {
   }
 
   metadata = {
-    ssh-keys = "yelinaung:${file("public_key.pub")}"
+    ssh-keys = "yelinaung:${file("../kube_installation_files/public_key.pub")}"
   }
 
   provisioner "file" {
