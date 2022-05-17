@@ -75,6 +75,9 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+    - name: Create dummy private key
+      run: mkdir ~/.ssh && echo "# DUMMY KEY" >> ~/.ssh/id_rsa
+
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init [Network]
       run: cd cks-cluster/network && terraform init
