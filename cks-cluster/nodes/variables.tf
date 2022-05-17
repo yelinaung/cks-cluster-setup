@@ -1,6 +1,8 @@
 variable "credentials" {}
 variable "gcp_project" {}
-variable "name" {}
+variable "name" {
+  type = string
+}
 variable "region" {}
 variable "zone" {}
 
@@ -13,7 +15,9 @@ variable "cks_worker_node_name" {}
 variable "cks_worker_node_tags" {}
 
 # Network Variables
-variable "network_name" {}
+variable "network_name" {
+  type = string
+}
 variable "network_description" {}
 variable "subnet_name_cks" {}
 variable "ip_cidr_range_cks" {}
