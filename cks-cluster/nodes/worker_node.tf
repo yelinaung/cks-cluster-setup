@@ -3,6 +3,7 @@ resource "google_compute_instance" "cks-worker-node" {
   machine_type   = var.cks_node_type
   zone           = var.zone
   tags           = var.cks_worker_node_tags
+  labels         = var.cks_worker_node_labels
   can_ip_forward = true
   desired_status = "RUNNING"
 
@@ -48,12 +49,17 @@ resource "google_compute_instance" "cks-worker-node" {
 
   provisioner "file" {
     source      = "../kube_installation_files/install_worker.sh"
-    destination = "/tmp/installations.sh"
+    destination = "/home/yelinaung/install_worker.sh"
+
     connection {
-      host        = google_compute_instance.cks-worker-node.network_interface.0.access_config.0.nat_ip
+      host        = google_compute_address.cks_worker_ip.address
       type        = "ssh"
       user        = "yelinaung"
       private_key = file("~/.ssh/id_rsa")
     }
   }
+
+  # https://stackoverflow.com/a/67118781/2438460
+  # metadata_startup_script = file("../kube_installation_files/install_worker.sh")
+
 }

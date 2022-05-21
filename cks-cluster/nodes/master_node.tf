@@ -3,6 +3,7 @@ resource "google_compute_instance" "cks-master-node" {
   machine_type   = var.cks_node_type
   zone           = var.zone
   tags           = var.cks_master_node_tags
+  labels         = var.cks_master_node_labels
   can_ip_forward = true
   desired_status = "RUNNING"
 
@@ -48,12 +49,13 @@ resource "google_compute_instance" "cks-master-node" {
 
   provisioner "file" {
     source      = "../kube_installation_files/install_master.sh"
-    destination = "/tmp/installations.sh"
+    destination = "/home/yelinaung/install_master.sh"
     connection {
-      host        = google_compute_instance.cks-master-node.network_interface.0.access_config.0.nat_ip
+      host        = google_compute_address.cks_master_ip.address
       type        = "ssh"
       user        = "yelinaung"
       private_key = file("~/.ssh/id_rsa")
+      agent       = "false"
     }
   }
 }
