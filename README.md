@@ -10,7 +10,7 @@ This is the sample Kubernetes cluster provisioned by Terraform on GCP.
 ```bash
 cd network && terraform init
 ```
-- Example [tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files=)
+- Create the variables. Example [tfvars file](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files=)
 
 ```hcl
 credentials = "<PATH TO YOUR SERVICE ACCOUNT JSON FILE>"
@@ -28,4 +28,11 @@ ip_cidr_range_cks      = "<CIDR RANGE>"
 
 # Firewall Variables
 cks_firewall_name = "<FIREWALL NAME>"
+```
+- Format (fmt), plan and apply
+```bash
+# in the network folder
+terraform fmt
+terraform plan
+terraform apply
 ```
