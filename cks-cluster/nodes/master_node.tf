@@ -5,7 +5,7 @@ resource "google_compute_instance" "cks-master-node" {
   tags           = var.cks_master_node_tags
   labels         = var.cks_master_node_labels
   can_ip_forward = true
-  desired_status = "RUNNING"
+  desired_status = "TERMINATED"
 
   boot_disk {
     initialize_params {
