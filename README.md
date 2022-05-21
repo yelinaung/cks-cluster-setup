@@ -3,7 +3,7 @@
 This is the sample Kubernetes cluster provisioned by Terraform on GCP.
 
 ### Setup
-- Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli).
+- Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) and [gcloud](https://cloud.google.com/sdk/docs/install).
 - Follow [Terraform GCP tutorial](https://learn.hashicorp.com/tutorials/terraform/google-cloud-platform-build#set-up-gcp=) for GCP specific Terraform setup.
 
 - Init the Network module

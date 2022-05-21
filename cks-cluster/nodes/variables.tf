@@ -1,8 +1,5 @@
 variable "credentials" {}
 variable "gcp_project" {}
-variable "name" {
-  type = string
-}
 variable "region" {}
 variable "zone" {}
 
