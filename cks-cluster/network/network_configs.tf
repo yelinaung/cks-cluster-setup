@@ -88,7 +88,3 @@ resource "google_compute_firewall" "external" {
 }
 */
 
-// address
-resource "google_compute_address" "cks" {
-  name = "cks"
-}

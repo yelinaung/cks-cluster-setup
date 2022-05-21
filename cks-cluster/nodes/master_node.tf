@@ -37,7 +37,9 @@ resource "google_compute_instance" "cks-master-node" {
   network_interface {
     network    = var.network_name
     subnetwork = var.subnet_name_cks
-    access_config {}
+    access_config {
+      nat_ip = google_compute_address.cks_master_ip.address
+    }
   }
 
   metadata = {
