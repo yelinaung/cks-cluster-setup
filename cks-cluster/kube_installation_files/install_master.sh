@@ -16,10 +16,10 @@ if [ "$DISTRIB_RELEASE" != "20.04" ]; then
     echo "This script only works on Ubuntu 20.04!"
     echo "You're using: ${DISTRIB_DESCRIPTION}"
     echo "Better ABORT with Ctrl+C. Or press any key to continue the install"
-    read -r
+    read
 fi
 
-KUBE_VERSION=1.23.6
+KUBE_VERSION=1.26.1
 
 
 ### setup terminal
@@ -43,7 +43,7 @@ sed -i '/\sswap\s/ s/^\(.*\)$/#\1/g' /etc/fstab
 
 ### remove packages
 kubeadm reset -f || true
-crictl rm --force "$(crictl ps -a -q)" || true
+crictl rm --force $(crictl ps -a -q) || true
 apt-mark unhold kubelet kubeadm kubectl kubernetes-cni || true
 apt-get remove -y docker.io containerd kubelet kubeadm kubectl kubernetes-cni || true
 apt-get autoremove -y
@@ -53,8 +53,8 @@ systemctl daemon-reload
 
 ### install podman
 . /etc/os-release
-echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/testing/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:testing.list
-curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/testing/xUbuntu_${VERSION_ID}/Release.key" | sudo apt-key add -
+echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:testing.list
+curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key" | sudo apt-key add -
 apt-get update -qq
 apt-get -qq -y install podman cri-tools containers-common
 rm /etc/apt/sources.list.d/devel:kubic:libcontainers:testing.list
@@ -72,6 +72,16 @@ EOF
 apt-get update
 apt-get install -y docker.io containerd kubelet=${KUBE_VERSION}-00 kubeadm=${KUBE_VERSION}-00 kubectl=${KUBE_VERSION}-00 kubernetes-cni
 apt-mark hold kubelet kubeadm kubectl kubernetes-cni
+
+
+### install containerd 1.6 over apt-installed-version
+wget https://github.com/containerd/containerd/releases/download/v1.6.12/containerd-1.6.12-linux-amd64.tar.gz
+tar xvf containerd-1.6.12-linux-amd64.tar.gz
+systemctl stop containerd
+mv bin/* /usr/bin
+rm -rf bin containerd-1.6.12-linux-amd64.tar.gz
+systemctl unmask containerd
+systemctl start containerd
 
 
 ### containerd
@@ -165,9 +175,10 @@ kubectl apply -f https://raw.githubusercontent.com/killer-sh/cks-course-environm
 
 # etcdctl
 ETCDCTL_VERSION=v3.5.1
-ETCDCTL_VERSION_FULL=etcd-${ETCDCTL_VERSION}-linux-amd64
+ETCDCTL_ARCH=$(dpkg --print-architecture)
+ETCDCTL_VERSION_FULL=etcd-${ETCDCTL_VERSION}-linux-${ETCDCTL_ARCH}
 wget https://github.com/etcd-io/etcd/releases/download/${ETCDCTL_VERSION}/${ETCDCTL_VERSION_FULL}.tar.gz
-tar xzf ${ETCDCTL_VERSION_FULL}.tar.gz
+tar xzf ${ETCDCTL_VERSION_FULL}.tar.gz ${ETCDCTL_VERSION_FULL}/etcdctl
 mv ${ETCDCTL_VERSION_FULL}/etcdctl /usr/bin/
 rm -rf ${ETCDCTL_VERSION_FULL} ${ETCDCTL_VERSION_FULL}.tar.gz
 
